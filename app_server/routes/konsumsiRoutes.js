@@ -5,8 +5,12 @@ import {
   updateKonsumsi,
   deleteKonsumsi,
 } from "../controllers/konsumsiController.js";
+import authMiddleware from "../middleware/auth.js";
 
 const router = express.Router();
+
+// protect all konsumsi routes — user must be logged in and send Bearer <token>
+router.use(authMiddleware);
 
 router.get("/", getAllKonsumsi);
 router.post("/", createKonsumsi);

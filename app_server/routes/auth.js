@@ -5,7 +5,7 @@ const authController = require('../controllers/authController');
 // route register
 router.post('/register', authController.register);
 
-// route login
+// route login  DIBUGGED
 router.post('/login', authController.login);
 
 // route profile

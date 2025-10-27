@@ -1,8 +1,10 @@
 import express from "express";
-import { getMahasiswa } from "../controllers/mahasiswaController.js";
+// mahasiswaController is CommonJS; import default and then pick properties
+import mahasiswaController from "../controllers/mahasiswaController.js";
 
 const router = express.Router();
 
-router.get("/", getMahasiswa);
+const { getAll } = mahasiswaController;
+router.get("/", getAll);
 
 export default router;

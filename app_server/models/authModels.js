@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-// Simple User schema matching controller fields
+// Mongoose User model used by authController
 const userSchema = new mongoose.Schema({
   username: { type: String, required: true },
   email: { type: String, required: true, unique: true },
@@ -13,42 +13,31 @@ const User = {
   // data: { username, email, password }
   create: (data, callback) => {
     const user = new UserModel({ username: data.username, email: data.email, password: data.password });
-    user.save((err, saved) => {
-      if (err) return callback(err);
-      callback(null, saved);
-    });
+    user
+      .save()
+      .then(saved => callback(null, saved))
+      .catch(err => callback(err));
   },
 
   // callback(err, resultsArray)
   findByEmail: (email, callback) => {
-    UserModel.find({ email: email }, (err, docs) => {
-      if (err) return callback(err);
-      callback(null, docs);
-    });
+    UserModel.find({ email: email })
+      .lean()
+      .exec()
+      .then(docs => callback(null, docs))
+      .catch(err => callback(err));
   },
 
   findById: (id, callback) => {
-    UserModel.findById(id, (err, doc) => {
-      if (err) return callback(err);
-      if (!doc) return callback(null, []);
-      callback(null, [doc]); // controller expects results array
-    });
+    UserModel.findById(id)
+      .lean()
+      .exec()
+      .then(doc => {
+        if (!doc) return callback(null, []);
+        return callback(null, [doc]); // controller expects results array
+      })
+      .catch(err => callback(err));
   }
 };
 
 module.exports = User;
-const db = require('../config/db'); // koneksi database
-
-const Mahasiswa = {
-  create: (data, callback) => {
-    const query = `INSERT INTO mahasiswa (nama, npm, jurusan) VALUES (?, ?, ?)`;
-    db.query(query, [data.nama, data.npm, data.jurusan], callback);
-  },
-
-  findAll: (callback) => {
-    const query = `SELECT * FROM mahasiswa`;
-    db.query(query, callback);
-  }
-};
-
-module.exports = Mahasiswa;

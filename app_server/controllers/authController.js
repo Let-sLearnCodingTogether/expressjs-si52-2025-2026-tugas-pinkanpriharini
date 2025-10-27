@@ -2,7 +2,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/authModels');
 
-const SECRET_KEY = 'pinkan123';
+const SECRET_KEY = process.env.JWT_SECRET || 'pinkan123';
 
 exports.register = (req, res) => {
   const { username, email, password } = req.body;
@@ -38,7 +38,8 @@ exports.login = (req, res) => {
       if (err) return res.status(500).json({ message: 'Kesalahan server' });
       if (!isMatch) return res.status(401).json({ message: 'Password salah' });
 
-      const token = jwt.sign({ id: user.id, email: user.email }, SECRET_KEY, {
+      const userIdStr = String(user._id || user.id);
+      const token = jwt.sign({ id: userIdStr, email: user.email }, SECRET_KEY, {
         expiresIn: '2h'
       });
 
@@ -48,7 +49,7 @@ exports.login = (req, res) => {
 };
 
 exports.profile = (req, res) => {
-  const userId = req.user.id;
+  const userId = (req.user && (req.user.id || req.user._id));
 
   User.findById(userId, (err, results) => {
     if (err) return res.status(500).json({ message: 'Kesalahan server' });

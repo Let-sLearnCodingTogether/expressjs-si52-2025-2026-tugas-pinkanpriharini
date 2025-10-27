@@ -14,7 +14,7 @@ export default function authMiddleware(req, res, next) {
   try {
     const decoded = jwt.verify(token, SECRET);
     // attach user info to req.user so controllers can use it
-    req.user = { id: decoded.id, email: decoded.email };
+    req.user = { id: decoded.id || decoded._id, _id: decoded._id || decoded.id, email: decoded.email };
     next();
   } catch (err) {
     return res.status(401).json({ message: 'Invalid or expired token' });

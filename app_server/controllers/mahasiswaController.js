@@ -1,4 +1,4 @@
-const Mahasiswa = require('../models/mahasiswaModel');
+const Mahasiswa = require('../models/mahasiswa');
 
 // Daftar (insert data mahasiswa)
 exports.register = (req, res) => {

@@ -5,7 +5,7 @@ import Konsumsi from "../models/konsumsiModel.js";
 // GET semua data konsumsi milik user yang sedang login
 export const getAllKonsumsi = async (req, res) => {
   try {
-    const userId = req.user && req.user.id;
+    const userId = (req.user && (req.user.id || req.user._id));
     if (!userId) return res.status(401).json({ message: 'Unauthorized' });
     const konsumsi = await Konsumsi.find({ userId }).sort({ time: -1 });
     res.status(200).json(konsumsi);
@@ -17,7 +17,7 @@ export const getAllKonsumsi = async (req, res) => {
 // CREATE data konsumsi baru (will attach current user's id)
 export const createKonsumsi = async (req, res) => {
   try {
-    const userId = req.user && req.user.id;
+    const userId = (req.user && (req.user.id || req.user._id));
     if (!userId) return res.status(401).json({ message: 'Unauthorized' });
 
     // Prefer amountInMl/time for water consumption. Accept either shape.
@@ -42,7 +42,7 @@ export const createKonsumsi = async (req, res) => {
 // UPDATE data konsumsi (only owner can update)
 export const updateKonsumsi = async (req, res) => {
   try {
-    const userId = req.user && req.user.id;
+    const userId = (req.user && (req.user.id || req.user._id));
     if (!userId) return res.status(401).json({ message: 'Unauthorized' });
 
     const updated = await Konsumsi.findOneAndUpdate(

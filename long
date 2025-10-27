@@ -1,0 +1,15 @@
+# 1) Hapus install yang korup
+Remove-Item -Recurse -Force node_modules
+Remove-Item -Force package-lock.json
+
+# 2) (opsional) verifikasi cache npm
+npm cache verify
+
+# 3) Install ulang
+npm install
+
+# 4) Cek paket debug bisa di-resolve
+node -e "console.log(require.resolve('debug'))"
+
+# 5) Jalankan server
+node app.js
